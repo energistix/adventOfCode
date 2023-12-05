@@ -7,7 +7,7 @@ colorsMaxs = {"red": 12, "green": 13, "blue": 14}
 colorsList = list(colorsMaxs.keys())
 
 
-def parsInt(string: str):
+def parseInt(string: str):
     res = ""
     for char in string:
         if char.isdigit():
@@ -17,7 +17,7 @@ def parsInt(string: str):
     return res
 
 
-def parseGame(string: str):
+def parseGame(string: str) -> tuple[dict[str, int], str]:
     balloons: dict[str, int] = {}
     while not string.startswith(";") and len(string) > 0:
         color, ammount, string = parseBalloon(string)
@@ -37,7 +37,7 @@ def parseColor(string: str):
 
 
 def parseBalloon(string: str) -> tuple[str, int, str]:
-    ammount = parsInt(string)
+    ammount = parseInt(string)
     string = string.replace(ammount, "", 1)
     color = parseColor(string)
     string = string.replace(color, "", 1)
@@ -51,7 +51,7 @@ for line in lines:
     line = line.replace("Game", "", 1)
     line = line.replace(" ", "")
     line = line.replace("\n", "")
-    gameid = parsInt(line)
+    gameid = parseInt(line)
     line = line.replace(f"{gameid}:", "", 1)
 
     possible = True
