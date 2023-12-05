@@ -1,5 +1,5 @@
 lines: list[str] = []
-with open("./day2/input.txt", "r") as f:
+with open("./input.txt", "r") as f:
     lines = f.readlines()
 
 
@@ -47,25 +47,26 @@ def parseBalloon(string: str) -> tuple[str, int, str]:
 
 total: int = 0
 
-for line in lines:
-    line = line.replace("Game", "", 1)
-    line = line.replace(" ", "")
-    line = line.replace("\n", "")
-    gameid = parseInt(line)
-    line = line.replace(f"{gameid}:", "", 1)
+if __name__ == "__main__":
+    for line in lines:
+        line = line.replace("Game", "", 1)
+        line = line.replace(" ", "")
+        line = line.replace("\n", "")
+        gameid = parseInt(line)
+        line = line.replace(f"{gameid}:", "", 1)
 
-    possible = True
+        possible = True
 
-    while len(line) > 0 and possible:
-        game, line = parseGame(line)
-        for color, max in colorsMaxs.items():
-            if color in game and game[color] > max:
-                possible = False
-                break
+        while len(line) > 0 and possible:
+            game, line = parseGame(line)
+            for color, max in colorsMaxs.items():
+                if color in game and game[color] > max:
+                    possible = False
+                    break
 
-    if possible:
-        total += int(gameid)
+        if possible:
+            total += int(gameid)
 
-    print(f"{gameid} : {line}")
+        print(f"{gameid} : {line}")
 
 print(total)
