@@ -34,7 +34,7 @@ class MyMap:
         for range in self.ranges:
             if range.is_in_source(n):
                 return range.value(n)
-        raise ValueError(f"{n} is not in map {self}")
+        return n
 
     def add_range(self, destination: int, source: int, length: int):
         self.ranges.append(MyRange(destination, source, length))
@@ -55,3 +55,13 @@ for _ in range(mapsAmmount):
             line = lines.pop(0)
         else:
             line = ""
+
+results: list[int] = []
+
+for seed in seeds:
+    value = int(seed)
+    for map in maps:
+        value = map.value(value)
+    results.append(value)
+
+print(min(results))
