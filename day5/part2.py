@@ -17,9 +17,7 @@ class MyRange:
         self.offset = destination - source
 
     def is_in_source(self, n: int) -> bool:
-        if n >= self.source and n <= self.source + self.length:
-            return True
-        return False
+        return n >= self.source and n <= self.source + self.length
 
     def value(self, n: int) -> int:
         if not self.is_in_source(n):
@@ -36,10 +34,9 @@ class MyMap:
         self.ranges: list[MyRange] = []
 
     def value(self, n: int) -> int:
-        for range in self.ranges:
-            if range.is_in_source(n):
-                return range.value(n)
-        return n
+        return next(
+            (range.value(n) for range in self.ranges if range.is_in_source(n)), n
+        )
 
     def add_range(self, destination: int, source: int, length: int):
         self.ranges.append(MyRange(destination, source, length))
@@ -51,11 +48,9 @@ class SimpleRange:
         self.end = end
 
     def hasOverlap(self, other: MyRange) -> bool:
-        if (other.source <= self.source and other.source_end >= self.source) or (
+        return (other.source <= self.source and other.source_end >= self.source) or (
             other.source <= self.end and other.source_end >= self.end
-        ):
-            return True
-        return False
+        )
 
     def transform(self, other: MyRange) -> list[SimpleRange]:
         out: list[SimpleRange] = []
@@ -117,12 +112,7 @@ for _ in range(mapsAmmount):
     while line != "":
         nbrs = map(int, line.split(" "))
         current_map.add_range(*nbrs)
-        if len(lines) > 0:
-            line = lines.pop(0)
-        else:
-            line = ""
-
-
+        line = lines.pop(0) if len(lines) > 0 else ""
 seedsRanges = RangeGroup()
 
 for i in range(0, len(seeds), 2):
