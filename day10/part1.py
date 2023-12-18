@@ -1,6 +1,6 @@
 from typing import Literal
 
-with open("./inputTest.txt") as file:
+with open("./input.txt") as file:
     lines = list(map(lambda s: s.removesuffix("\n"), file.readlines()))
 
 startingPosition = None
@@ -64,10 +64,6 @@ def is_connected(position1: tuple[int, int], position2: tuple[int, int]):
     char1_connections = get_connected_sides(lines[position1[0]][position1[1]])
     char2_connections = get_connected_sides(lines[position2[0]][position2[1]])
 
-    print(position1, char1_connections, lines[position1[0]][position1[1]])
-    print(position2, char2_connections, lines[position2[0]][position2[1]])
-    print()
-
     if position1[0] != position2[0] and position1[1] != position2[1]:
         raise ValueError(f"{position1} and {position2} are not next to one another")
     if position1[1] < position2[1]:
@@ -90,8 +86,19 @@ while len(toDiscover) > 0:
     discovering = toDiscover.pop(0)
     neighbours = get_neighbours(discovering, distMap)
     # filter out neighbours that are not connected to the current position
-    a = filter(lambda pos: is_connected(pos, discovering), list(neighbours.keys()))
-    print(list(a))
-    # find all connected neighbours that have a (current value + 1) higher than our current value
-    #     assign them a new value and add their position to the list ot toDiscover
-    #     if their new value is higher than the highest value then change the highestValue
+    validKeys = filter(
+        lambda pos: is_connected(pos, discovering), list(neighbours.keys())
+    )
+    for validKey in validKeys:
+        if (
+            neighbours[validKey] > distMap[discovering[0]][discovering[1]] + 1
+            or neighbours[validKey] == -1
+        ):
+            distMap[validKey[0]][validKey[1]] = (
+                distMap[discovering[0]][discovering[1]] + 1
+            )
+            toDiscover.append(validKey)
+            if distMap[validKey[0]][validKey[1]] + 1 > highest_value:
+                highest_value = distMap[validKey[0]][validKey[1]]
+
+print(highest_value)
